@@ -1,0 +1,21 @@
+{
+  "user-fields-enums": {
+    "roles": [
+      "user",
+      "admin"
+    ]
+  },
+  "user-groups": {
+    "verifiedUsersGroup": {
+      "roles": [
+        "user",
+        "admin"
+      ]
+    },
+    "adminsGroup": {
+      "roles": [
+        "admin"
+      ]
+    }
+  }
+}

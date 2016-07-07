@@ -1,0 +1,27 @@
+{
+  "db-config": {
+    "credentials": {
+      "type": "cloud",
+      "name": "wm-task-tracker",
+      "host": "ds015995.mlab.com",
+      "port": 15995,
+      "user": "wm-task-tracker",
+      "password": "wm-task-tracker",
+      "mongod version": "3.0.7"
+    },
+    "options": {
+      "server": {
+        "socketOptions": {
+          "keepAlive": 300000,
+          "connectTimeoutMS": 30000
+        }
+      },
+      "replset": {
+        "socketOptions": {
+          "keepAlive": 300000,
+          "connectTimeoutMS": 30000
+        }
+      }
+    }
+  }
+}
