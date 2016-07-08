@@ -58,3 +58,27 @@ module.exports.editTask = function (req, res, next) {
     return new Error("Not implemented");
 };
 
+/**
+ * Get all Task Tickets assigned to user with appropriate status or without.
+ *
+ * @method getSingleUserTasks
+ * @param req
+ * @param res
+ * @param next
+ */
+module.exports.getSingleUserTasks = function (req, res, next) {
+    return new Error("Not implemented");
+};
+
+/**
+ * Get all Task Tickets with appropriate status or without.
+ *
+ * @method getAllTasks
+ * @param req
+ * @param res
+ * @param next
+ */
+module.exports.getAllTasks = function (req, res, next) {
+    return new Error("Not implemented");
+};
+

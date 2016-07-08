@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /** Auth API routing */
 /**
- * @api {post} /sign-in/ Log in to system, response with access token: JWT.
+ * @api {post} /sign-in/ Log in to system.
  * @apiGroup Auth
  *
  * @apiParam {string} login user's login
@@ -65,7 +65,9 @@ app.post('/sign-in', require('./api-routes/auth-api').signIn);
  */
 app.post('/sign-up', require('./api-routes/users-api').createNewUser);
 
-/** User API  routing */
+/**
+ * User API  routing
+ */
 
 /**
  * @api {get} /api/users/:user_login Fetch single user by login.
@@ -133,7 +135,7 @@ app.delete('/api/users/:user_login', require('./api-routes/users-api').deleteSin
 
 /**
  * @api {get} /api/users/ Get all users from DB.
- * @apiGroup Admin
+ * @apiGroup User
  *
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
@@ -155,7 +157,7 @@ app.get('/api/users', require('./api-routes/users-api').getAllUsers);
  */
 
 /**
- * @api {post} /api/tasks/ create new task.
+ * @api {post} /api/tasks/ Create new task.
  * @apiGroup TaskTickets
  *
  * @apiParam {Object} taskTicket
@@ -194,6 +196,63 @@ app.post('/api/tasks', require('./api-routes/task-tickets-api').createNewTask);
  * @apiError (403) Forbidden invalid auth token
  */
 app.get('/api/tasks/:task_id', require('./api-routes/task-tickets-api').getSingleTask);
+
+/**
+ * @api {get} /api/tasks/:status Get all tasks from DB.
+ * @apiGroup TaskTickets
+ *
+ * @apiDescription Get all tickets from DB with appropriate status or all existing tasks.
+ *
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/tasks/
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/tasks/free
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/tasks/finish-request
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/tasks/finished
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *     }
+ *
+ * @apiSuccess (200) {Array} taskTickets array of Task tickets
+ * @apiSuccess (204) NoContent
+ *
+ * @apiError (403) Forbidden invalid auth token
+ */
+app.get('/api/tasks', require('./api-routes/task-tickets-api').getAllTasks);
+
+/**
+ * @api {get} /api/users/:user_login/tickets/:status Get all tasks assigned to user.
+ * @apiGroup TaskTickets
+ *
+ * @apiDescription Get all tickets assigned to user from DB with appropriate status or all assigned to user tasks.
+ *
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/users/test-user/tickets/
+ * @apiExample {browser} Example:
+ * http://localhost:3000/api/users/test-user/tickets/finished
+ *
+ * @apiParam {String} user_login user's login
+ * @apiParam {String} status ticket_status
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *     }
+ *
+ * @apiPermission this user of admin
+ *
+ * @apiSuccess (200) {Array} tickets_array
+ *
+ * @apiError (404) NotFound
+ * @apiError (403) Forbidden invalid auth token
+ */
+app.get('/api/users/:user_login/tickets/:status', require('./api-routes/task-tickets-api').getSingleUserTasks);
 
 /**
  * @api {put} /api/tasks/:task_id Replace task by new one.
@@ -246,8 +305,14 @@ app.delete('/api/tasks/:task_id', require('./api-routes/task-tickets-api').delet
  *
  * @apiParam {String} task_id task's _id
  * @apiParam {Object} changesDescription
- * @apiParamExample {json} Request-Example: { "op": "replace", "path": "/task_text", "value": "new task text" }
- * @apiParamExample {json} Request-Example: { "op": "replace", "path": "/task_status", "value": "finish-request" }
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *  "op": "replace", "path": "/task_text", "value": "new task text"
+ *  }
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *  "op": "replace", "path": "/task_status", "value": "finish-request"
+ *  }
  *
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
