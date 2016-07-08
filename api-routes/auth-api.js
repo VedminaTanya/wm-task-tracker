@@ -27,24 +27,31 @@ module.exports.signIn = function (req, res) {
         /** find user by login in DB*/
         mongoose.model('User').findOne({login: req.body.login})
             .then((user)=> {
-            if (user) {
-                log.info("User trying to log in: %s", JSON.stringify(user));
+                    if (user) {
+                        log.info("User trying to log in: %s", JSON.stringify(user));
 
-                /** Check that client password matches user from DB password.*/
-                user.comparePassword(req.body.password, function (err, isMatch) {
-                    (isMatch && !err) ?
-                        /** response to client with token*/
-                        res.json({token: jwt.encode(user, SECRET_KEY)})
-                        : res.status(HttpStatus.UNAUTHORIZED).end();
-                });
-            } else
-                res.status(HttpStatus.BAD_REQUEST).end();
-    }
-    )
-    .catch((err)=> {
-            log.log('error', err);
-        res.status(HttpStatus.UNAUTHORIZED).end();
-    });
+                        /** Check that client password matches user from DB password.*/
+                        user.comparePassword(req.body.password, function (err, isMatch) {
+                            if (isMatch && !err) {
+                                //Create DTO consists only from login&&password
+                                let userCredentialsDTO = {
+                                    login: user.login,
+                                    password: user.password
+                                };
+                                // response to client with token
+                                res.json({token: jwt.encode(userCredentialsDTO, SECRET_KEY)})
+                            } else {
+                                res.status(HttpStatus.UNAUTHORIZED).end();
+                            }
+                        });
+                    } else
+                        res.status(HttpStatus.BAD_REQUEST).end();
+                }
+            )
+            .catch((err)=> {
+                log.log('error', err);
+                res.status(HttpStatus.UNAUTHORIZED).end();
+            });
     } else {
         log.info("User trying to log in without login or password");
         res.status(HttpStatus.BAD_REQUEST).end();

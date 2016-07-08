@@ -14,10 +14,12 @@ const log = require('../utils/logger')(module);
 /** read configuration*/
 nconf.reset();
 nconf.argv().env()
-    .add('secret', {type: 'file', file: 'config/config-common.json'});
+    .add('secret', {type: 'file', file: 'config/config-common.json'})
+    .add('user-fields-enums', {type: 'file', file: 'config/user-auth-groups.json'});
 
 const SALT_WORK_FACTOR = 10;
 const USER_ROLES = nconf.get("user-fields-enums:roles");
+log.info("user roles %s", USER_ROLES);
 
 /**
  * User schema.
@@ -25,6 +27,11 @@ const USER_ROLES = nconf.get("user-fields-enums:roles");
  * Encapsulates fields validators.
  */
 var UserSchema = new mongoose.Schema({
+    login: {
+        type: String,
+        unique: true,
+        required: [true, "No login!"]
+    },
     email: {
         type: String,
         unique: true,

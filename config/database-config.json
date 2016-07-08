@@ -5,8 +5,8 @@
       "name": "wm-task-tracker",
       "host": "ds015995.mlab.com",
       "port": 15995,
-      "user": "wm-task-tracker",
-      "password": "wm-task-tracker",
+      "user": "web-manufacture",
+      "password": "web-manufacture",
       "mongod version": "3.0.7"
     },
     "options": {

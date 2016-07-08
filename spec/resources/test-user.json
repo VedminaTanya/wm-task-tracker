@@ -1,0 +1,9 @@
+{
+  "testUser": {
+    "login": "user",
+    "email": "user@user.com",
+    "name": "test user userovich",
+    "contact_number": "099 999 9999",
+    "password": "user"
+  }
+}

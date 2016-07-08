@@ -80,7 +80,7 @@ module.exports.getSingleUser = function (req, res, next) {
  */
 module.exports.createNewUser = function (req, res) {
     let newUser = new UserModel(req.body);
-
+    
     /** trying to save new user*/
     newUser.save(function (err, user) {
         if (err || !user) {

@@ -6,6 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+/** connect to DB*/
+const databaseConfig = require('./utils/database-connect');
+
 var app = express();
 
 // view engine setup
@@ -20,13 +23,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
 /** Auth API routing */
 /**
  * @api {post} /sign-in/ Log in to system, response with access token: JWT.
@@ -38,7 +34,7 @@ app.use(function (req, res, next) {
  * @apiSuccess (200) {string} token jwt auth token
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"}
+ *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"}
  *
  * @apiError (400) NoSuchUser
  * @apiError (400) NoLoginOrPassword
@@ -55,13 +51,17 @@ app.post('/sign-in', require('./api-routes/auth-api').signIn);
  * @apiSuccess (201) {string} token jwt auth token
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 201 CREATED
- *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"}
+ *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"}
  *
  * @apiError (400) ValidationError invalid fields
  * @apiError (409) ConflictInDB user with one or more unique fields already exists
+ *
  * @apiErrorExample {json} Error-Response:
  *     HTTP/1.1 400 Not Found
  *     {"email":{"message":"Invalid email!","name":"ValidatorError","properties":{"regexp":{},"type":"regexp","message":"Invalid email!","path":"email","value":"admin@a.ruuuuuuuuuuuuuuu"},"kind":"regexp","path":"email","value":"admin@a.ruuuuuuuuuuuuuuu"}}
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"password":{"message":"No password!","name":"ValidatorError","properties":{"type":"required","message":"No password!","path":"password"},"kind":"required","path":"password"},"contact_number":{"message":"No contact number!","name":"ValidatorError","properties":{"type":"required","message":"No contact number!","path":"contact_number"},"kind":"required","path":"contact_number"},"name":{"message":"No full name!","name":"ValidatorError","properties":{"type":"required","message":"No full name!","path":"name"},"kind":"required","path":"name"},"email":{"message":"No email!","name":"ValidatorError","properties":{"type":"required","message":"No email!","path":"email"},"kind":"required","path":"email"}}
  */
 app.post('/sign-up', require('./api-routes/users-api').createNewUser);
 
@@ -76,7 +76,7 @@ app.post('/sign-up', require('./api-routes/users-api').createNewUser);
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
- *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
  *     }
  *
  * @apiPermission this user of admin
@@ -98,7 +98,7 @@ app.get('/api/users/:user_login', require('./api-routes/users-api').getSingleUse
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
- *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
  *       "content-type": "application/json"
  *     }
  *
@@ -121,7 +121,7 @@ app.put('/api/users/:user_login', require('./api-routes/users-api').replaceUserB
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
- *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
  *     }
  *
  * @apiPermission this user of admin
@@ -138,7 +138,7 @@ app.delete('/api/users/:user_login', require('./api-routes/users-api').deleteSin
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
- *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
  *     }
  *
  * @apiPermission admin
@@ -151,6 +151,12 @@ app.delete('/api/users/:user_login', require('./api-routes/users-api').deleteSin
 app.get('/api/users', require('./api-routes/users-api').getAllUsers);
 
 /** error handlers*/
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
 // development error handler
 // will print stacktrace

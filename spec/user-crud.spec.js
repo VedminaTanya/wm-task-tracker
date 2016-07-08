@@ -19,8 +19,6 @@ nconf.argv().env()
 let testUser = nconf.get("testUser");
 let adminUser = nconf.get("adminUser");
 
-console.log(testUser, adminUser);
-
 /** URL */
 //auth
 const BASE_URL = `http://localhost:3000`;
@@ -36,6 +34,8 @@ const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
  * expect that admin user already exists in DB.
  */
 describe("CRUD", function () {
+    console.log("Test user entities: testUser: %j\r\nadminUser: %j", testUser, adminUser);
+
     let authToken = "";
 
     /** create new test user*/

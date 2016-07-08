@@ -1,0 +1,9 @@
+{
+  "adminUser": {
+    "login": "admin",
+    "email": "admin@admin.com",
+    "name": "test admin adminovich",
+    "contact_number":"067 708 90 15",
+    "password": "admin"
+  }
+}
