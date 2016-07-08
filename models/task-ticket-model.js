@@ -18,19 +18,23 @@ nconf.argv().env()
 
 const TASK_STATUSES = nconf.get("task-ticket-status-enums:statuses");
 
-log.info("Available tasks statuses: %s", JSON.stringify(TASK_STATUSES));
+log.debug("Available tasks statuses: %s", JSON.stringify(TASK_STATUSES));
 
 /**
  * Task ticket schema.
  *
  * Encapsulates fields validators.
  */
-var UserSchema = new mongoose.Schema({
+var TaskTicketSchema = new mongoose.Schema({
+    assigned_to_user_login: {
+        type: String
+        //TODO login regexp validation here
+    },
     name: {
         type: String,
         required: [true, "No ticket name!"]
     },
-    detailed_task: {
+    task_text: {
         type: String
     },
     expiration_date: {
@@ -43,17 +47,19 @@ var UserSchema = new mongoose.Schema({
         type: String,
         enum: TASK_STATUSES,
         required: [true, "No role"]
-    },
-    password: {
-        type: String,
-        required: [true, "No password!"]
-    },
-    /** while user register - set role automatically*/
-    role: {
-        type: String,
-        enum: USER_ROLES,
-        required: [true, "No role"]
     }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+/**
+ * Actions performing before VALIDATION of task ticket fields.
+ *
+ * Set ticket tsk status as free.
+ */
+TaskTicketSchema.pre('validate', function (next) {
+    let taskTicket = this;
+    taskTicket.task_status = TASK_STATUSES[TASK_STATUSES.indexOf("free")];
+
+    next();
+});
+
+module.exports = mongoose.model('TaskTicket', TaskTicketSchema);

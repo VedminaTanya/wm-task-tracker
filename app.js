@@ -150,6 +150,117 @@ app.delete('/api/users/:user_login', require('./api-routes/users-api').deleteSin
  */
 app.get('/api/users', require('./api-routes/users-api').getAllUsers);
 
+/**
+ * Task tickets API
+ */
+
+/**
+ * @api {post} /api/tasks/ create new task.
+ * @apiGroup TaskTickets
+ *
+ * @apiParam {Object} taskTicket
+ *
+ * @apiPermission admin
+ *
+ * @apiSuccess (201) {Object} taskTicket
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 201 CREATED
+ *     {}
+ *
+ * @apiError (400) ValidationError invalid fields
+ * @apiError (409) ConflictInDB task ticket with one or more unique fields already exists
+ *
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 BadRequest
+ *     {}
+ */
+app.post('/api/tasks', require('./api-routes/task-tickets-api').createNewTask);
+
+/**
+ * @api {get} /api/tasks/:task_id Fetch single task ticket by _id.
+ * @apiGroup TaskTickets
+ *
+ * @apiParam {String} task_id task's _id
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *     }
+ *
+ * @apiSuccess (200) {Object} taskTicket
+ *
+ * @apiError (404) NotFound
+ * @apiError (403) Forbidden invalid auth token
+ */
+app.get('/api/tasks/:task_id', require('./api-routes/task-tickets-api').getSingleTask);
+
+/**
+ * @api {put} /api/tasks/:task_id Replace task by new one.
+ * @apiGroup TaskTickets
+ *
+ * @apiParam {String} task_id task's _id
+ * @apiParam {Object} task new task
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *       "content-type": "application/json"
+ *     }
+ *
+ * @apiPermission admin
+ *
+ * @apiSuccess (200) {json} new task
+ *
+ * @apiError (400) BadRequest
+ * @apiError (404) NotFound
+ * @apiError (403) Forbidden invalid auth token
+ */
+app.put('/api/tasks/:task_id', require('./api-routes/task-tickets-api').replaceTaskByNew);
+
+/**
+ * @api {delete} /api/tasks/:task_id Delete task.
+ * @apiGroup TaskTickets
+ *
+ * @apiParam {String} task_id task's _id
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *     }
+ *
+ * @apiPermission admin
+ *
+ * @apiError (403) Forbidden invalid auth token
+ * @apiError (404) NotFound
+ */
+app.delete('/api/tasks/:task_id', require('./api-routes/task-tickets-api').deleteSingleTask);
+
+/**
+ * @api {patch} /api/tasks/:task_id/task_text
+ * @apiGroup TaskTickets
+ *
+ * @apiDescription JavaScript Object Notation (JSON) Patch  RFC 6902 compatible. <a href="http://jsonpatch.com/"></a>
+ *
+ * @apiParam {String} task_id task's _id
+ * @apiParam {Object} changesDescription
+ * @apiParamExample {json} Request-Example: { "op": "replace", "path": "/task_text", "value": "new task text" }
+ * @apiParamExample {json} Request-Example: { "op": "replace", "path": "/task_status", "value": "finish-request" }
+ *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *     }
+ *
+ * @apiError (403) Forbidden invalid auth token
+ * @apiError (404) NotFound
+ */
+app.patch('/api/tasks/:task_id/', require('./api-routes/task-tickets-api').editTask);
+
+
 /** error handlers*/
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

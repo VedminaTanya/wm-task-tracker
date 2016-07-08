@@ -1,9 +1,10 @@
 {
   "task-ticket-status-enums": {
     "statuses": [
+      "free",
       "assigned",
-      "in progress",
-      "finish request",
+      "in-progress",
+      "finish-request",
       "finished"
     ]
   }
