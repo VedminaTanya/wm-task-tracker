@@ -47,6 +47,16 @@ app.post('/sign-in', require('./api-routes/auth-api').signIn);
  * @apiGroup Auth
  *
  * @apiParam {Object} user
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "login": "test",
+ *       "email": "mail@mail.com",
+ *       "name": "user name",
+ *       "contact_number":"099 999 9999",
+ *       "key_skills": "html5 css3 js",
+ *       "additional_info": "some info",
+ *       "password": "my_password"
+ *     }
  *
  * @apiSuccess (201) {string} token jwt auth token
  * @apiSuccessExample Success-Response:
@@ -161,6 +171,15 @@ app.get('/api/users', require('./api-routes/users-api').getAllUsers);
  * @apiGroup TaskTickets
  *
  * @apiParam {Object} taskTicket
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "assigned_to_user_login": "test_user",
+ *       "name": "Create some front end",
+ *       "task_text":"Implement this",
+ *       "expiration_date": 1467994183,
+ *       "additional_files": [],
+ *       "task_status": "assigned"
+ *     }
  *
  * @apiPermission admin
  *
