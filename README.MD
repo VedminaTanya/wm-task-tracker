@@ -4,6 +4,10 @@ Custom task tracker allow user to register their profile, take tasks from "free 
 or see assigned by admin tasks, create "finish request" after actual implementation, 
 edit task additional fields - "How I understand task?" and "Comments".
  
+[Temporary deployed on heroku](https://wm-task-tracker.herokuapp.com/)
+
+[API detailed documentation](https://wm-task-tracker.herokuapp.com/doc)
+
 ## Entities
 
 ### User
