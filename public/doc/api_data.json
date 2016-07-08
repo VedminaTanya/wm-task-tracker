@@ -91,7 +91,14 @@
             "description": ""
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n  \"login\": \"test\",\n  \"email\": \"mail@mail.com\",\n  \"name\": \"user name\",\n  \"contact_number\":\"099 999 9999\",\n  \"key_skills\": \"html5 css3 js\",\n  \"additional_info\": \"some info\",\n  \"password\": \"my_password\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "success": {
       "fields": {
@@ -580,7 +587,14 @@
             "description": ""
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n  \"assigned_to_user_login\": \"test_user\",\n  \"name\": \"Create some front end\",\n  \"task_text\":\"Implement this\",\n  \"expiration_date\": 1467994183,\n  \"additional_files\": [],\n  \"task_status\": \"assigned\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "permission": [
       {
