@@ -1,8 +1,9 @@
 /**
- * Test User CRUD
+ * Test Task Ticket CRUD
  *
  * @see <a href="https://www.npmjs.com/package/jasmine-node">jasmine for node</a>
  * @see <a href="https://www.npmjs.com/package/async">async</a>
+ *
  * @author polesskiy
  */
 const request = require("request");
@@ -14,10 +15,12 @@ const nconf = require('nconf');
 nconf.reset();
 nconf.argv().env()
     .add('testUser', {type: 'file', file: 'spec/resources/test-users/test-user.json'})
-    .add('adminUser', {type: 'file', file: 'spec/resources/test-users/admin-user.json'});
+    .add('adminUser', {type: 'file', file: 'spec/resources/test-users/admin-user.json'})
+    .add('testFreeTask', {type: 'file', file: 'spec/resources/test-tasks/test-free-task.json'});
 
 let testUser = nconf.get("testUser");
 let adminUser = nconf.get("adminUser");
+let testFreeTask = nconf.get("testFreeTask");
 
 /** URL */
 //auth
@@ -26,7 +29,9 @@ const REGISTRATION_URL = `${BASE_URL}/sign-up`;
 const LOGIN_URL = `${BASE_URL}/sign-in`;
 //user api
 const USERS_API_URL = `${BASE_URL}/api/users`;
-const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
+// const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
+//task ticket api
+const TASKS_API_URL = `${BASE_URL}/api/tasks`;
 
 /**
  * Test user CRUD.
@@ -34,35 +39,37 @@ const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
  * expect that admin user already exists in DB.
  */
 describe("CRUD", function () {
-    console.log("Test user entities: testUser: %j\r\nadminUser: %j", testUser, adminUser);
+    console.log("Test entities - adminUser: %j\r\ntest free task: %j", adminUser, testFreeTask);
 
-    let authToken = "";
+    let adminAuthToken = "";
 
     /** create new test user*/
     beforeEach(function (done) {
         async.waterfall([
-                /** register new test user*/
+                /** register new test task*/
                     function (next) {
                     request.post({
                         headers: {'content-type': 'application/json'},
-                        url: REGISTRATION_URL,
-                        body: JSON.stringify(testUser)
+                        url: TASKS_API_URL,
+                        body: JSON.stringify(testFreeTask)
                     }, next)
                 },
                 function (response, body, next) {
                     expect(response.statusCode).toBe(201);
+                    console.log("Task ticket registered successfully, %s", body);
+                    testFreeTask = JSON.parse(body);
                     next();
                 },
-                /** log in*/
+                /** log in as admin*/
                     function (next) {
                     request.post({
                         headers: {'content-type': 'application/json'},
                         url: LOGIN_URL,
-                        body: JSON.stringify(testUser)
+                        body: JSON.stringify(adminUser)
                     }, next)
                 },
                 function (response, body, next) {
-                    authToken = JSON.parse(body).token;
+                    adminAuthToken = JSON.parse(body).token;
                     expect(response.statusCode).toBe(200);
                     next(null, body);
                 }],
@@ -73,14 +80,14 @@ describe("CRUD", function () {
         );
     });
 
-    /** delete recently created test user */
+    /** delete recently created test task ticket */
     afterEach(function (done) {
         async.waterfall([
                 function (next) {
                     request({
-                        headers: {'Authorization': authToken},
+                        headers: {'Authorization': adminAuthToken},
                         method: 'DELETE',
-                        url: TEST_USER_URL
+                        url: `${TASKS_API_URL}/${testFreeTask._id}`
                     }, next)
                 },
                 function (response, body, next) {
@@ -90,29 +97,32 @@ describe("CRUD", function () {
             function (err, result) {
                 expect(err).toBe(null);
                 done();
-            }
-        )
+            })
     });
 
-    /** fetch single user*/
-    it("GET single user, returns status code 200", function (done) {
-        async.waterfall([
-            function (next) {
-                request.get({
-                    headers: {'Authorization': authToken},
-                    url: TEST_USER_URL
-                }, next);
-            },
-            function (response, body) {
-                console.log("Response for fetching single user: \r\n%s", body);
-                expect(response.statusCode).toBe(200);
-                done();
-            }
-        ]);
-    });
+    /** fetch single task*/
+    it("GET single task ticket, returns status code 200",
+        function (done) {
+            async.waterfall([
+                    function (next) {
+                        request.get({
+                            headers: {'Authorization': adminAuthToken},
+                            url: `${TASKS_API_URL}/${testFreeTask._id}`
+                        }, next);
+                    },
+                    function (response, body, next) {
+                        console.log("Response for fetching single task: \r\n%s", body);
+                        expect(response.statusCode).toBe(200);
+                        next(null, body);
+                    }],
+                function (err, result) {
+                    expect(err).toBe(null);
+                    done();
+                })
+        });
 
     /** update single user*/
-    it("PUT - update single user", function (done) {
+    xit("PUT - update single user", function (done) {
         //update email
         testUser.email = "updatedemal@mail.ru";
         async.waterfall([
@@ -120,7 +130,7 @@ describe("CRUD", function () {
                 console.log("Sending PUT request with new user %s", JSON.stringify(testUser));
                 request.put({
                     headers: {
-                        'Authorization': authToken,
+                        'Authorization': adminAuthToken,
                         'content-type': 'application/json'
                     },
                     url: TEST_USER_URL,
@@ -136,28 +146,15 @@ describe("CRUD", function () {
     });
 
     /** get all users by admin account */
-    it("GET all users from admin account", function (done) {
+    it("GET all available task tickets", function (done) {
         let adminAuthToken = null;
 
         async.waterfall([
-                /** log in as admin*/
-                    function (next) {
-                    request.post({
-                        headers: {'content-type': 'application/json'},
-                        url: LOGIN_URL,
-                        body: JSON.stringify(adminUser)
-                    }, next)
-                },
-                function (response, body, next) {
-                    adminAuthToken = JSON.parse(body).token;
-                    expect(response.statusCode).toBe(200);
-                    next();
-                },
                 /** get all users from server*/
                     function (next) {
                     request.get({
                         headers: {'Authorization': adminAuthToken},
-                        url: USERS_API_URL
+                        url: TASKS_API_URL
                     }, next)
                 },
                 function (response, body, next) {
@@ -165,9 +162,9 @@ describe("CRUD", function () {
                     next(null, body);
                 }
             ],
-            function (err, usersArr) {
+            function (err, tasksArr) {
                 expect(err).toBe(null);
-                console.log("All users from server:\r\n%s", usersArr);
+                console.log("All users from server:\r\n%s", tasksArr);
                 done();
             }
         )

@@ -5,7 +5,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
-// const util = require('util');
 const HttpStatus = require('http-status-codes');
 const nconf = require('nconf');
 
