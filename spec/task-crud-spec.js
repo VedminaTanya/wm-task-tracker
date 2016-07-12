@@ -34,7 +34,7 @@ const USERS_API_URL = `${BASE_URL}/api/users`;
 const TASKS_API_URL = `${BASE_URL}/api/tasks`;
 
 /**
- * Test user CRUD.
+ * Test Task Ticket CRUD.
  *
  * expect that admin user already exists in DB.
  */
@@ -121,24 +121,23 @@ describe("CRUD", function () {
                 })
         });
 
-    /** update single user*/
-    xit("PUT - update single user", function (done) {
+    /** replace single task*/
+    it("PUT - update single task", function (done) {
         //update email
-        testUser.email = "updatedemal@mail.ru";
+        testFreeTask.name = "new task name";
         async.waterfall([
             function (next) {
-                console.log("Sending PUT request with new user %s", JSON.stringify(testUser));
                 request.put({
                     headers: {
                         'Authorization': adminAuthToken,
                         'content-type': 'application/json'
                     },
-                    url: TEST_USER_URL,
-                    body: JSON.stringify(testUser)
+                    url: `${TASKS_API_URL}/${testFreeTask._id}`,
+                    body: JSON.stringify(testFreeTask)
                 }, next);
             },
             function (response, body) {
-                console.log("Response for updating single user: \r\n%s", body);
+                console.log("Response for updating single task: \r\n%s", body);
                 expect(response.statusCode).toBe(200);
                 done();
             }
@@ -164,7 +163,7 @@ describe("CRUD", function () {
             ],
             function (err, tasksArr) {
                 expect(err).toBe(null);
-                console.log("All users from server:\r\n%s", tasksArr);
+                console.log("All task tickets from server:\r\n%s", tasksArr);
                 done();
             }
         )

@@ -317,7 +317,7 @@ app.put('/api/tasks/:task_id', require('./api-routes/task-tickets-api').replaceT
 app.delete('/api/tasks/:task_id', require('./api-routes/task-tickets-api').deleteSingleTask);
 
 /**
- * @api {patch} /api/tasks/:task_id/task_text
+ * @api {patch} /api/tasks/:task_id/task_text Edit task ticket field
  * @apiGroup TaskTickets
  *
  * @apiDescription JavaScript Object Notation (JSON) Patch  RFC 6902 compatible. <a href="http://jsonpatch.com/"></a>

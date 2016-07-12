@@ -491,7 +491,7 @@ define({ "api": [
   {
     "type": "patch",
     "url": "/api/tasks/:task_id/task_text",
-    "title": "",
+    "title": "Edit task ticket field",
     "group": "TaskTickets",
     "description": "<p>JavaScript Object Notation (JSON) Patch  RFC 6902 compatible. <a href=\"http://jsonpatch.com/\"></a></p>",
     "parameter": {

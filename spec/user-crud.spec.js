@@ -33,7 +33,7 @@ const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
  *
  * expect that admin user already exists in DB.
  */
-describe("CRUD", function () {
+xdescribe("CRUD", function () {
     console.log("Test user entities: testUser: %j\r\nadminUser: %j", testUser, adminUser);
 
     let authToken = "";

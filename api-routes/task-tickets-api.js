@@ -46,8 +46,6 @@ module.exports.createNewTask = function (req, res, next) {
  * @param next
  */
 module.exports.getSingleTask = function (req, res, next) {
-    // log.debug("Trying to find single task by id %s", req.params.task_id);
-
     mongoose.model('TaskTicket').findOne({_id: req.params.task_id})
         .then((task)=> {
             res.status(HttpStatus.OK).json(task);
@@ -64,7 +62,13 @@ module.exports.getSingleTask = function (req, res, next) {
  * @param next
  */
 module.exports.replaceTaskByNew = function (req, res, next) {
-    return new Error("Not implemented");
+    let newTask = new TaskTicketModel(req.body);
+
+    mongoose.model('TaskTicket').findOneAndUpdate({_id: req.params.task_id}, newTask, {new: true})
+        .then((task)=> {
+            res.status(HttpStatus.OK).json(task);
+        });
+    //TODO implement .catch
 };
 
 /**
