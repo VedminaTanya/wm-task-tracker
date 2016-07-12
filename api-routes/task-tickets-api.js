@@ -140,4 +140,3 @@ module.exports.getAllTasks = function (req, res, next) {
         });
     //TODO implement .catch
 };
-

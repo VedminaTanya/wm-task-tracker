@@ -25,11 +25,13 @@ const SECRET_KEY = nconf.get("security:secret");
  */
 module.exports = function (req, res, next) {
     let authToken = req.headers.authorization;
+
     log.info("Auth token from client: %s", authToken);
 
     if (authToken) {
         //decode jwt token
         let jwtDecodeErrorFlag = false;
+        
         try {
             var decodedJWT = jwt.decode(authToken, SECRET_KEY);
         } catch (err) {

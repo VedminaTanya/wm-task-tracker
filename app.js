@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 /** connect to DB*/
-const databaseConfig = require('./utils/database-connect');
+require('./utils/database-connect');
 
 var app = express();
 
@@ -222,13 +222,13 @@ app.get('/api/tasks/:task_id', require('./api-routes/task-tickets-api').getSingl
  *
  * @apiDescription Get all tickets from DB with appropriate status or all existing tasks.
  *
- * @apiExample {browser} Example:
+ * @apiExample {browser} ExampleAllTasks:
  * http://localhost:3000/api/tasks/
- * @apiExample {browser} Example:
+ * @apiExample {browser} ExampleAllFreeTasks:
  * http://localhost:3000/api/tasks/free
- * @apiExample {browser} Example:
+ * @apiExample {browser} ExampleAllTasksWithFinishRequest:
  * http://localhost:3000/api/tasks/finish-request
- * @apiExample {browser} Example:
+ * @apiExample {browser} ExampleAllFinishedTasks:
  * http://localhost:3000/api/tasks/finished
  *
  * @apiHeader {String} token jwt auth token

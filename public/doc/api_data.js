@@ -233,22 +233,22 @@ define({ "api": [
     "description": "<p>Get all tickets from DB with appropriate status or all existing tasks.</p>",
     "examples": [
       {
-        "title": "Example:",
+        "title": "ExampleAllTasks:",
         "content": "http://localhost:3000/api/tasks/",
         "type": "browser"
       },
       {
-        "title": "Example:",
+        "title": "ExampleAllFreeTasks:",
         "content": "http://localhost:3000/api/tasks/free",
         "type": "browser"
       },
       {
-        "title": "Example:",
+        "title": "ExampleAllTasksWithFinishRequest:",
         "content": "http://localhost:3000/api/tasks/finish-request",
         "type": "browser"
       },
       {
-        "title": "Example:",
+        "title": "ExampleAllFinishedTasks:",
         "content": "http://localhost:3000/api/tasks/finished",
         "type": "browser"
       }
