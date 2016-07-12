@@ -144,6 +144,56 @@ describe("CRUD", function () {
         ]);
     });
 
+    /** edit task_text field*/
+    it("PATCH - edit single task text field", function (done) {
+        async.waterfall([
+            function (next) {
+                request.patch({
+                    headers: {
+                        'Authorization': adminAuthToken,
+                        'content-type': 'application/json'
+                    },
+                    url: `${TASKS_API_URL}/${testFreeTask._id}`,
+                    body: JSON.stringify({
+                        "op": "replace",
+                        "path": "/task_text",
+                        "value": "new task text"
+                    })
+                }, next);
+            },
+            function (response, body) {
+                console.log("Response for patching single task text field: \r\n%s", body);
+                expect(response.statusCode).toBe(200);
+                done();
+            }
+        ]);
+    });
+
+    /** edit task_status field*/
+    it("PATCH - edit single task task_status field", function (done) {
+        async.waterfall([
+            function (next) {
+                request.patch({
+                    headers: {
+                        'Authorization': adminAuthToken,
+                        'content-type': 'application/json'
+                    },
+                    url: `${TASKS_API_URL}/${testFreeTask._id}`,
+                    body: JSON.stringify({
+                        "op": "replace",
+                        "path": "/task_status",
+                        "value": "finished"
+                    })
+                }, next);
+            },
+            function (response, body) {
+                console.log("Response for patching single task task_status field: \r\n%s", body);
+                expect(response.statusCode).toBe(200);
+                done();
+            }
+        ]);
+    });
+
     /** get all users by admin account */
     it("GET all available task tickets", function (done) {
         let adminAuthToken = null;

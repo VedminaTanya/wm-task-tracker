@@ -96,7 +96,21 @@ module.exports.deleteSingleTask = function (req, res, next) {
  * @param next
  */
 module.exports.editTask = function (req, res, next) {
-    return new Error("Not implemented");
+    const REPLACE_OPERATION_NAME = "replace";
+
+    if (req.body.op == REPLACE_OPERATION_NAME) {
+        //get field from req path, for example path=/task_text, actual field name = task_text.
+        let fieldUpdateObj = {};
+        fieldUpdateObj[req.body.path.substring(1)] = req.body.value;
+
+        mongoose.model('TaskTicket').findOneAndUpdate({_id: req.params.task_id}, {$set: fieldUpdateObj}, {new: true})
+            .then((task)=> {
+                res.status(HttpStatus.OK).json(task);
+            });
+    } else res.status(HttpStatus.BAD_REQUEST).end();
+    // TODO implement .catch
+
+
 };
 
 /**
