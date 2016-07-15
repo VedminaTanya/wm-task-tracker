@@ -5,6 +5,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const HttpStatus = require('http-status-codes');
 
 /** connect to DB*/
 require('./utils/database-connect');
@@ -32,6 +33,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.options('/', (req, res, next)=>res.status(HttpStatus.OK));
 
 /** Auth API routing */
 /**
