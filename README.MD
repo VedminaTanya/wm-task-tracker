@@ -8,6 +8,16 @@ edit task additional fields - "How I understand task?" and "Comments".
 
 [API detailed documentation](https://wm-task-tracker.herokuapp.com/doc)
 
+    To run locally:
+    $ git clone https://github.com/polesskiy-dev/wm-task-tracker
+    $ cd wm-task-tracker
+    $ npm start
+    # open in browser http://localhost:3000
+    
+> If you use windows os - there may be problems with compiling bcrypt library, 
+see [node-gyp](https://github.com/nodejs/node-gyp) and follow appropriate instructions to install it and Visual C++ Build Environment, Python etc.
+OR you can replace bcrypt library (all usages and in package.json) on bcryptjs in your local repository.
+
 ## Entities
 
 ### User
