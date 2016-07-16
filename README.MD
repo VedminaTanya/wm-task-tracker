@@ -1,9 +1,7 @@
 # Web-Manufacture Task tracker
 
-Custom task tracker allow user to register their profile, take tasks from "free tasks list" 
-or see assigned by admin tasks, create "finish request" after actual implementation, 
-edit task additional fields - "How I understand task?" and "Comments".
- 
+Custom "task tracker" allow users to register their profiles, take tasks from "free tasks list" or see their tasks (assigned by admin ), create "finish request" after actual implementation of work and edit task ticket additional fields - "How I understand task?", "Comments" etc.
+
 [Temporary deployed on heroku](https://wm-task-tracker.herokuapp.com/)
 
 [API detailed documentation](https://wm-task-tracker.herokuapp.com/doc)
