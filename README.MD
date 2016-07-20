@@ -9,6 +9,7 @@ Custom "task tracker" allow users to register their profiles, take tasks from "f
     To run locally:
     $ git clone https://github.com/polesskiy-dev/wm-task-tracker
     $ cd wm-task-tracker
+    $ npm install   
     $ npm start
     # open in browser http://localhost:3000
     
