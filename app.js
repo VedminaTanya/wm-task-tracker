@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.options('//', (req, res, next)=>res.send(200));
+app.options('/', (req, res, next)=>res.send(200));
 
 /** Auth API routing */
 /**

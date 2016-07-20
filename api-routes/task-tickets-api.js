@@ -49,8 +49,11 @@ module.exports.getSingleTask = function (req, res, next) {
     mongoose.model('TaskTicket').findOne({_id: req.params.task_id})
         .then((task)=> {
             res.status(HttpStatus.OK).json(task);
+        })
+        .catch((err)=> {
+            log.log('error', err);
+            res.status(HttpStatus.CONFLICT).end();
         });
-    //TODO implement .catch
 };
 
 /**
@@ -67,8 +70,11 @@ module.exports.replaceTaskByNew = function (req, res, next) {
     mongoose.model('TaskTicket').findOneAndUpdate({_id: req.params.task_id}, newTask, {new: true})
         .then((task)=> {
             res.status(HttpStatus.OK).json(task);
+        })
+        .catch((err)=> {
+            log.log('error', err);
+            res.status(HttpStatus.CONFLICT).end();
         });
-    //TODO implement .catch
 };
 
 /**
@@ -83,8 +89,11 @@ module.exports.deleteSingleTask = function (req, res, next) {
     mongoose.model('TaskTicket').remove({_id: req.params.task_id})
         .then((task)=> {
             res.status(HttpStatus.OK).end();
+        })
+        .catch((err)=> {
+            log.log('error', err);
+            res.status(HttpStatus.CONFLICT).end();
         });
-    //TODO implement .catch
 };
 
 /**
@@ -106,11 +115,12 @@ module.exports.editTask = function (req, res, next) {
         mongoose.model('TaskTicket').findOneAndUpdate({_id: req.params.task_id}, {$set: fieldUpdateObj}, {new: true})
             .then((task)=> {
                 res.status(HttpStatus.OK).json(task);
+            })
+            .catch((err)=> {
+                log.log('error', err);
+                res.status(HttpStatus.CONFLICT).end();
             });
     } else res.status(HttpStatus.BAD_REQUEST).end();
-    // TODO implement .catch
-
-
 };
 
 /**
@@ -122,7 +132,14 @@ module.exports.editTask = function (req, res, next) {
  * @param next
  */
 module.exports.getSingleUserTasks = function (req, res, next) {
-    return new Error("Not implemented");
+    mongoose.model('TaskTicket').find({assigned_to_user_login: req.params.user_login})
+        .then((tasks)=> {
+            res.status(HttpStatus.OK).json(tasks);
+        })
+        .catch((err)=> {
+            log.log('error', err);
+            res.status(HttpStatus.CONFLICT).end();
+        });
 };
 
 /**
@@ -137,6 +154,9 @@ module.exports.getAllTasks = function (req, res, next) {
     mongoose.model('TaskTicket').find({})
         .then((tasks)=> {
             res.status(HttpStatus.OK).json(tasks);
+        })
+        .catch((err)=> {
+            log.log('error', err);
+            res.status(HttpStatus.CONFLICT).end();
         });
-    //TODO implement .catch
 };

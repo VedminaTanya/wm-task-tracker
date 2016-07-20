@@ -1,0 +1,22 @@
+{
+  "name": "wm-task-tracker",
+  "description": "simple task tracker",
+  "main": "app.js",
+  "authors": [
+    "polesskiy <polesskiy.dev@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/polesskiy-dev/wm-task-tracker",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.1.0"
+  }
+}
