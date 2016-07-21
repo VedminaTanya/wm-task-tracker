@@ -183,6 +183,13 @@ app.get('/api/users', require('./api-routes/users-api').getAllUsers);
  * @api {post} /api/tasks/ Create new task.
  * @apiGroup TaskTickets
  *
+ * @apiHeader {String} token jwt auth token
+ * @apiHeaderExample {String} Header-Example:
+ *     {
+ *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY"
+ *       "content-type": "application/json"
+ *     }
+ *
  * @apiParam {Object} taskTicket
  * @apiParamExample {json} Request-Example:
  *     {
@@ -191,6 +198,7 @@ app.get('/api/users', require('./api-routes/users-api').getAllUsers);
  *       "task_text":"Implement this",
  *       "expiration_date": 1467994183,
  *       "additional_files": [],
+ *       "urgency":"normal",
  *       "task_status": "assigned"
  *     }
  *
@@ -258,18 +266,18 @@ app.get('/api/tasks/:task_id', require('./api-routes/task-tickets-api').getSingl
 app.get('/api/tasks', require('./api-routes/task-tickets-api').getAllTasks);
 
 /**
- * @api {get} /api/users/:user_login/tickets/:status Get all tasks assigned to user.
+ * @api {get} /api/users/:user_login/tasks/:status Get all tasks assigned to user.
  * @apiGroup TaskTickets
  *
  * @apiDescription Get all tickets assigned to user from DB with appropriate status or all assigned to user tasks.
  *
  * @apiExample {browser} Example:
- * http://localhost:3000/api/users/test-user/tickets/
+ * http://localhost:3000/api/users/test-user/tasks/
  * @apiExample {browser} Example:
- * http://localhost:3000/api/users/test-user/tickets/finished
+ * http://localhost:3000/api/users/test-user/tasks/finished
  *
  * @apiParam {String} user_login user's login
- * @apiParam {String} status ticket_status
+ * @apiParam {String} status ticket_status, optional
  *
  * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
@@ -284,7 +292,7 @@ app.get('/api/tasks', require('./api-routes/task-tickets-api').getAllTasks);
  * @apiError (404) NotFound
  * @apiError (403) Forbidden invalid auth token
  */
-app.get('/api/users/:user_login/tickets/:status', require('./api-routes/task-tickets-api').getSingleUserTasks);
+app.get('/api/users/:user_login/tasks/:status?', require('./api-routes/task-tickets-api').getSingleUserTasks);
 
 /**
  * @api {put} /api/tasks/:task_id Replace task by new one.

@@ -5,6 +5,7 @@
     <title>wm-task-tracker</title>
     <!--scripts-->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="javascripts/task-ticket/task-ticket-factory.js"></script>
     <!-- css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="stylesheets/style.css"/>
@@ -215,5 +216,9 @@
 </body>
 <script>
 
+    taskTicketFactory.getAllTasks(null, "test_user").then(
+            result => console.log("Fulfilled: " + result),
+            error => console.log("Rejected: " + error)
+    );
 </script>
 </html>

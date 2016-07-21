@@ -389,19 +389,19 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/users/:user_login/tickets/:status",
+    "url": "/api/users/:user_login/tasks/:status",
     "title": "Get all tasks assigned to user.",
     "group": "TaskTickets",
     "description": "<p>Get all tickets assigned to user from DB with appropriate status or all assigned to user tasks.</p>",
     "examples": [
       {
         "title": "Example:",
-        "content": "http://localhost:3000/api/users/test-user/tickets/",
+        "content": "http://localhost:3000/api/users/test-user/tasks/",
         "type": "browser"
       },
       {
         "title": "Example:",
-        "content": "http://localhost:3000/api/users/test-user/tickets/finished",
+        "content": "http://localhost:3000/api/users/test-user/tasks/finished",
         "type": "browser"
       }
     ],
@@ -420,7 +420,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>ticket_status</p>"
+            "description": "<p>ticket_status, optional</p>"
           }
         ]
       }
@@ -486,7 +486,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "./app.js",
     "groupTitle": "TaskTickets",
-    "name": "GetApiUsersUser_loginTicketsStatus"
+    "name": "GetApiUsersUser_loginTasksStatus"
   },
   {
     "type": "patch",
@@ -576,6 +576,26 @@ define({ "api": [
     "url": "/api/tasks/",
     "title": "Create new task.",
     "group": "TaskTickets",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>jwt auth token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Authorization\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfX3YiOjAsInJvbGUiOiJ1c2VyIiwibG9naW4iOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwibmFtZSI6InRlc3QgdXNlciB1c2Vyb3ZpY2giLCJjb250YWN0X251bWJlciI6IjA5OSA5OTkgOTk5OSIsInBhc3N3b3JkIjoiJDJhJDEwJGtUR2pGZXF3ODh5ZTdWbVJXdno0RmV6bW9raXdkWFZOYUNGcmp5blpxMHJ6NHhqbXluSXMyIiwiX2lkIjoiNTc3Zjk1YTQ1ODg4YmE2ODQ3MmJmYWRiIn0._wRkAlJdX-wAfxtD-a9douRkYSm1aZ3d_6xT_ycZoxY\"\n  \"content-type\": \"application/json\"\n}",
+          "type": "String"
+        }
+      ]
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -591,7 +611,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n  \"assigned_to_user_login\": \"test_user\",\n  \"name\": \"Create some front end\",\n  \"task_text\":\"Implement this\",\n  \"expiration_date\": 1467994183,\n  \"additional_files\": [],\n  \"task_status\": \"assigned\"\n}",
+          "content": "{\n  \"assigned_to_user_login\": \"test_user\",\n  \"name\": \"Create some front end\",\n  \"task_text\":\"Implement this\",\n  \"expiration_date\": 1467994183,\n  \"additional_files\": [],\n  \"urgency\":\"normal\",\n  \"task_status\": \"assigned\"\n}",
           "type": "json"
         }
       ]

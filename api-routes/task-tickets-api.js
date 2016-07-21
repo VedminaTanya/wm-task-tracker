@@ -132,6 +132,7 @@ module.exports.editTask = function (req, res, next) {
  * @param next
  */
 module.exports.getSingleUserTasks = function (req, res, next) {
+    //TODO make query query for appropriate task status
     mongoose.model('TaskTicket').find({assigned_to_user_login: req.params.user_login})
         .then((tasks)=> {
             res.status(HttpStatus.OK).json(tasks);

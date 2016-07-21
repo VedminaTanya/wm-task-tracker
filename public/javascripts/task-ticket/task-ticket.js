@@ -1,6 +1,12 @@
 "use strict";
 
 class TaskTicket{
+
+    /**
+     * Task ticket.
+     *
+     * @param taskTicketJSON {string} - serialized task ticket
+     */
     constructor(taskTicketJSON){
         let taskTicketDTO = {};
         try {
@@ -16,4 +22,6 @@ class TaskTicket{
         this.additional_files = taskTicketDTO.additional_files;
         this.task_status = taskTicketDTO.task_status;
     }
+
+    
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <!-- css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+    <!--scripts-->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="javascripts/auth/registration.js"></script>
+</head>
+<body>
+<div class="row">
+    <nav class="navbar navbar-inverse" style="padding-left: 5px; padding-right: 25px">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="login.html">WebSiteName</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="col-md-3"></div>
+    <div class="col-md-6" style='border:1px solid black; margin-top: 1%'>
+        <form role="form"  target="uploader_iframe" style="padding: 10px" id="form">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input class="form-control" id="login" placeholder="Enter login">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="password-repeat"> Repeat password</label>
+                <input type="password" class="form-control" id="password-repeat" name="password-repeat" placeholder="Repeat password">
+            </div>
+            <div class="form-group">
+                <label for="email">Name</label>
+                <input class="form-control" id="name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Contact number</label>
+                <input class="form-control" id="contact" placeholder="Enter contact number">
+            </div>
+            <div class="form-group">
+                <label for="email">Key skills:</label>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" id ="html" value="html5">HTML 5</label>
+                </div>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" id="css" value="css">CSS</label>
+                </div>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" id="js" value="js">JavaScript</label>
+                </div>
+                <div class="form-group">
+                    <label for="about">About yourself:</label>
+                    <textarea class="form-control" id="about" rows="5" id="about"></textarea>
+                </div>
+            </div>
+            <button type="submit" id="sign-up" class="btn btn-success">Sign up</button>
+        </form>
+        <iframe id="uploader_iframe" name="uploader_iframe" style="display: none;"></iframe>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+</body>
+</html>
