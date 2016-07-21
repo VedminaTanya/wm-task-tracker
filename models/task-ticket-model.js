@@ -14,11 +14,10 @@ const log = require('../utils/logger')(module);
 /** read configuration*/
 nconf.reset();
 nconf.argv().env()
-    .add('secret', {type: 'file', file: 'config/tasks-config.json'});
+    .add('tasks-config', {type: 'file', file: 'config/tasks-config.json'});
 
 const TASK_STATUSES = nconf.get("task-ticket-status-enums:statuses");
-
-log.debug("Available tasks statuses: %s", JSON.stringify(TASK_STATUSES));
+const TASK_URGENCY = nconf.get("task-ticket-urgency-enums:urgency");
 
 /**
  * Task ticket schema.
@@ -42,6 +41,10 @@ var TaskTicketSchema = new mongoose.Schema({
     },
     additional_files: {
         type: [Buffer]
+    },
+    urgency:{
+        type: String,
+        enum: TASK_URGENCY
     },
     task_status: {
         type: String,

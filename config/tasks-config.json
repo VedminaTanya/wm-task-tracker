@@ -7,5 +7,12 @@
       "finish-request",
       "finished"
     ]
+  },
+  "task-ticket-urgency-enums": {
+    "urgency": [
+      "normal",
+      "medium",
+      "danger"
+    ]
   }
 }
