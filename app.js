@@ -263,7 +263,7 @@ app.get('/api/tasks/:task_id', require('./api-routes/task-tickets-api').getSingl
  *
  * @apiError (403) Forbidden invalid auth token
  */
-app.get('/api/tasks', require('./api-routes/task-tickets-api').getAllTasks);
+app.get('/api/tasks', require('./api-routes/task-tickets-api').getAllTasksPromise);
 
 /**
  * @api {get} /api/users/:user_login/tasks/:status Get all tasks assigned to user.

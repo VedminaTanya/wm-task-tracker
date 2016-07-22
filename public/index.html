@@ -5,7 +5,8 @@
     <title>wm-task-tracker</title>
     <!--scripts-->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="javascripts/task-ticket/task-ticket-factory.js"></script>
+    <script src="javascripts/task-ticket/fetch-task-tickets.js"></script>
+    <script src="javascripts/task-ticket/task-ticket-panel-factory.js"></script>
     <!-- css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="stylesheets/style.css"/>
@@ -148,7 +149,7 @@
                 </div>
 
                 <div class="panel-body">
-
+                    panel-body
                     <p class="expanding-text">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fringilla
                         felis ac purus tristique, non facilisis eros vulputate. Sed accumsan viverra nisl, nec aliquam
@@ -215,10 +216,16 @@
 </section>
 </body>
 <script>
+    "use strict";
+    fetchTasks.getAllTasksPromise("assigned", "test_user").then(
+            function (result) {
+                console.log("Fulfilled: " + result);
+                console.log(taskPanelsFactory.getSinglePanel(result[0]));
 
-    taskTicketFactory.getAllTasks("assigned", "test_user").then(
-            result => console.log("Fulfilled: " + result),
-            error => console.log("Rejected: " + error)
+            },
+            function (error) {
+                console.log("Rejected: " + error)
+            }
     );
 </script>
 </html>

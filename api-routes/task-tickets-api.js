@@ -151,12 +151,12 @@ module.exports.getSingleUserTasks = function (req, res, next) {
 /**
  * Get all Task Tickets with appropriate status or without.
  *
- * @method getAllTasks
+ * @method getAllTasksPromise
  * @param req
  * @param res
  * @param next
  */
-module.exports.getAllTasks = function (req, res, next) {
+module.exports.getAllTasksPromise = function (req, res, next) {
     mongoose.model('TaskTicket').find({})
         .then((tasks)=> {
             res.status(HttpStatus.OK).json(tasks);
