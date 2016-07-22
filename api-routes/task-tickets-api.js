@@ -132,14 +132,19 @@ module.exports.editTask = function (req, res, next) {
  * @param next
  */
 module.exports.getSingleUserTasks = function (req, res, next) {
-    //TODO make query query for appropriate task status
-    mongoose.model('TaskTicket').find({assigned_to_user_login: req.params.user_login})
+    //construct DB query param obj
+    let query = {};
+    query.assigned_to_user_login = req.params.user_login;
+    if (req.params.status) query.task_status = req.params.status;
+
+    //fetch from DB by query
+    mongoose.model('TaskTicket').find(query)
         .then((tasks)=> {
             res.status(HttpStatus.OK).json(tasks);
         })
         .catch((err)=> {
-            log.log('error', err);
-            res.status(HttpStatus.CONFLICT).end();
+            log.error(err);
+            res.status(HttpStatus.BAD_REQUEST).end();
         });
 };
 
@@ -158,6 +163,6 @@ module.exports.getAllTasks = function (req, res, next) {
         })
         .catch((err)=> {
             log.log('error', err);
-            res.status(HttpStatus.CONFLICT).end();
+            res.status(HttpStatus.BAD_REQUEST).end();
         });
 };

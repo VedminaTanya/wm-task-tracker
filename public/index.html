@@ -216,7 +216,7 @@
 </body>
 <script>
 
-    taskTicketFactory.getAllTasks(null, "test_user").then(
+    taskTicketFactory.getAllTasks("assigned", "test_user").then(
             result => console.log("Fulfilled: " + result),
             error => console.log("Rejected: " + error)
     );
